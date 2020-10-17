@@ -1,0 +1,42 @@
+{
+  "name": "grayl/gateway-minfraud",
+  "description": "MinFraud functionality for the Grayl PHP framework.",
+  "keywords": [
+    "grayl",
+    "minfraud"
+  ],
+  "license": "proprietary",
+  "authors": [
+    {
+      "name": "Grogwood LLC",
+      "email": "dev@grogwood.com",
+      "homepage": "http://grogwood.com",
+      "role": "Developer"
+    }
+  ],
+  "type": "library",
+  "require": {
+    "grayl/config": "^1",
+    "grayl/gateway-common": "^1",
+    "grayl/mixin-common": "^1",
+    "grayl/omnipay-common": "^1",
+    "grayl/store-order": "^1",
+    "maxmind/minfraud": "^1",
+    "php": "~7.4"
+  },
+  "require-dev": {
+    "grayl/gateway-pdo": "^1",
+    "grayl/omnipay-authorizenet": "^1",
+    "phpunit/phpunit": "^9"
+  },
+  "autoload": {
+    "psr-4": {
+      "Grayl\\Gateway\\MinFraud\\": "src/"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "Grayl\\Test\\Gateway\\MinFraud\\": "tests/"
+    }
+  }
+}
