@@ -15,7 +15,7 @@
     }
   ],
   "type": "library",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "require": {
     "grayl/config": "^1",
     "grayl/gateway-common": "^1",
