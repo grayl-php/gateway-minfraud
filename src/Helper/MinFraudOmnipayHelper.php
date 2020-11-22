@@ -30,10 +30,10 @@
       {
 
          // Credit card parameters
-         $request_data->setCreditCardParam( 'last_4_digits',
-                                            $this->getCreditCardEnding( $credit_card->getNumber() ) );
-         $request_data->setCreditCardParam( 'issuer_id_number',
-                                            $this->getCreditCardIssuer( $credit_card->getNumber() ) );
+         $request_data->setLast4Digits( MinFraudHelper::getInstance()
+                                                      ->getCreditCardEnding( $credit_card->getNumber() ) );
+         $request_data->setIssuerIdNumber( MinFraudHelper::getInstance()
+                                                         ->getCreditCardIssuer( $credit_card->getNumber() ) );
       }
 
 
@@ -48,51 +48,14 @@
       {
 
          // Event parameters
-         $request_data->setEventParam( 'type',
-                                       'purchase' );
+         $request_data->setTransactionType( 'purchase' );
 
          // Purchase parameters
-         $request_data->setPaymentParam( 'was_authorized',
-                                         true );
+         $request_data->setIsAuthorized( true );
 
          // Credit card parameters
-         $request_data->setCreditCardParam( 'avs_result',
-                                            $gateway_response->getAVSCode() );
-         $request_data->setCreditCardParam( 'cvv_result',
-                                            $gateway_response->getCVVCode() );
-      }
-
-
-      /**
-       * Gets the last four digits of a credit card number
-       *
-       * @param string $credit_card The credit card number
-       *
-       * @return string
-       */
-      private function getCreditCardEnding ( string $credit_card ): ?string
-      {
-
-         // Return the last four digits of the number
-         return substr( $credit_card,
-                        - 4 );
-      }
-
-
-      /**
-       * Gets the first six digits of a credit card number (issuer)
-       *
-       * @param string $credit_card The credit card number
-       *
-       * @return string
-       */
-      private function getCreditCardIssuer ( string $credit_card ): ?string
-      {
-
-         // Return the first six digits of the number
-         return substr( $credit_card,
-                        0,
-                        6 );
+         $request_data->setAVSResult( $gateway_response->getAVSCode() );
+         $request_data->setCVVResult( $gateway_response->getCVVCode() );
       }
 
    }

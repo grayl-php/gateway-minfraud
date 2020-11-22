@@ -62,22 +62,17 @@
       {
 
          // Set the IP address
-         $request_data->setDeviceParam( 'ip_address',
-                                        $_SERVER[ 'REMOTE_ADDR' ] );
+         $request_data->setIPAddress( $_SERVER[ 'REMOTE_ADDR' ] );
 
          // Set browser information
-         $request_data->setDeviceParam( 'user_agent',
-                                        $_SERVER[ 'HTTP_USER_AGENT' ] );
-         $request_data->setDeviceParam( 'accept_language',
-                                        $_SERVER[ 'HTTP_ACCEPT_LANGUAGE' ] );
+         $request_data->setUserAgent( $_SERVER[ 'HTTP_USER_AGENT' ] );
+         $request_data->setAcceptLanguage( $_SERVER[ 'HTTP_ACCEPT_LANGUAGE' ] );
 
          // Session ID if it exists
-         $request_data->setDeviceParam( 'session_id',
-                                        session_id() );
+         $request_data->setSessionID( session_id() );
 
          // Server time
-         $request_data->setEventParam( 'time',
-                                       date( DATE_RFC3339 ) );
+         $request_data->setTransactionDate( date( DATE_RFC3339 ) );
       }
 
 
@@ -125,22 +120,17 @@
       {
 
          // Event parameters
-         $request_data->setEventParam( 'transaction_id',
-                                       $data->getOrderID() );
+         $request_data->setTransactionID( $data->getOrderID() );
 
          // Device parameters
-         $request_data->setDeviceParam( 'ip_address',
-                                        $data->getIPAddress() );
+         $request_data->setIPAddress( $data->getIPAddress() );
 
          // Order parameters
-         $request_data->setOrderParam( 'amount',
-                                       $data->getAmount() );
-         $request_data->setOrderParam( 'currency',
-                                       $data->getCurrency() );
+         $request_data->setAmount( $data->getAmount() );
+         $request_data->setCurrency( $data->getCurrency() );
 
          // Custom parameters
-         $request_data->setCustomParam( 'description',
-                                        $data->getDescription() );
+         $request_data->setDescription( $data->getDescription() );
       }
 
 
@@ -155,48 +145,31 @@
       {
 
          // Billing parameters
-         $request_data->setBillingParam( 'first_name',
-                                         $customer->getFirstName() );
-         $request_data->setBillingParam( 'last_name',
-                                         $customer->getLastName() );
-         $request_data->setBillingParam( 'address',
-                                         $customer->getAddress1() );
-         $request_data->setBillingParam( 'address_2',
-                                         $customer->getAddress2() );
-         $request_data->setBillingParam( 'city',
-                                         $customer->getCity() );
+         $request_data->setBillingFirstName( $customer->getFirstName() );
+         $request_data->setBillingLastName( $customer->getLastName() );
+         $request_data->setBillingAddress1( $customer->getAddress1() );
+         $request_data->setBillingAddress2( $customer->getAddress2() );
+         $request_data->setBillingCity( $customer->getCity() );
          // Note: State is not used in Maxmind, "region" is, and it cannot be input reliably
-         $request_data->setBillingParam( 'country',
-                                         $customer->getCountry() );
-         $request_data->setBillingParam( 'postal',
-                                         $customer->getPostcode() );
-         $request_data->setBillingParam( 'phone_number',
-                                         $customer->getPhoneNumber() );
+         $request_data->setBillingCountry( $customer->getCountry() );
+         $request_data->setBillingPostcode( $customer->getPostcode() );
+         $request_data->setBillingPhoneNumber( $customer->getPhoneNumber() );
 
          // Shipping parameters
-         $request_data->setShippingParam( 'first_name',
-                                          $customer->getFirstName() );
-         $request_data->setShippingParam( 'last_name',
-                                          $customer->getLastName() );
-         $request_data->setShippingParam( 'address',
-                                          $customer->getAddress1() );
-         $request_data->setShippingParam( 'address_2',
-                                          $customer->getAddress2() );
-         $request_data->setShippingParam( 'city',
-                                          $customer->getCity() );
+         $request_data->setShippingFirstName( $customer->getFirstName() );
+         $request_data->setShippingLastName( $customer->getLastName() );
+         $request_data->setShippingAddress1( $customer->getAddress1() );
+         $request_data->setShippingAddress2( $customer->getAddress2() );
+         $request_data->setShippingCity( $customer->getCity() );
          // Note: State is not used in Maxmind, "region" is, and it cannot be input reliably
-         $request_data->setShippingParam( 'country',
-                                          $customer->getCountry() );
-         $request_data->setShippingParam( 'postal',
-                                          $customer->getPostcode() );
-         $request_data->setShippingParam( 'phone_number',
-                                          $customer->getPhoneNumber() );
+         $request_data->setShippingCountry( $customer->getCountry() );
+         $request_data->setShippingPostcode( $customer->getPostcode() );
+         $request_data->setShippingPhoneNumber( $customer->getPhoneNumber() );
 
          // Email parameters
-         $request_data->setEmailParam( 'address',
-                                       $customer->getEmailAddress() );
-         $request_data->setEmailParam( 'domain',
-                                       $this->getEmailAddressTLD( $customer->getEmailAddress() ) );
+         $request_data->setEmailAddress( $customer->getEmailAddress() );
+         $request_data->setEmailDomain( MinFraudHelper::getInstance()
+                                                      ->getEmailAddressTLD( $customer->getEmailAddress() ) );
       }
 
 
@@ -232,29 +205,10 @@
       {
 
          // Payment parameters
-         $request_data->setPaymentParam( 'processor',
-                                         $payment->getProcessor() );
+         $request_data->setProcessor( $payment->getProcessor() );
 
          // Custom parameters
-         $request_data->setCustomParam( 'reference',
-                                        $payment->getReferenceID() );
-      }
-
-
-      /**
-       * Gets the TLD of an email address
-       *
-       * @param string $email The email address
-       *
-       * @return string
-       */
-      private function getEmailAddressTLD ( string $email ): ?string
-      {
-
-         // Return everything after the "@" symbol
-         return substr( strrchr( $email,
-                                 "@" ),
-                        1 );
+         $request_data->setReference( $payment->getReferenceID() );
       }
 
    }

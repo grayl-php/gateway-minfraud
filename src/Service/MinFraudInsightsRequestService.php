@@ -32,19 +32,19 @@
 
          // Build the request
          $api_request = $gateway_data->getAPI()
-                                     ->withDevice( $this->removeEmptyParameters( $request_data->getDeviceParams() ) )
-                                     ->withEvent( $this->removeEmptyParameters( $request_data->getEventParams() ) )
-                                     ->withAccount( $this->removeEmptyParameters( $request_data->getAccountParams() ) )
-                                     ->withEmail( $this->removeEmptyParameters( $request_data->getEmailParams() ) )
-                                     ->withBilling( $this->removeEmptyParameters( $request_data->getBillingParams() ) )
-                                     ->withShipping( $this->removeEmptyParameters( $request_data->getShippingParams() ) )
-                                     ->withPayment( $this->removeEmptyParameters( $request_data->getPaymentParams() ) )
-                                     ->withCreditCard( $this->removeEmptyParameters( $request_data->getCreditCardParams() ) )
-                                     ->withOrder( $this->removeEmptyParameters( $request_data->getOrderParams() ) )
-                                     ->withCustomInputs( $this->removeEmptyParameters( $request_data->getCustomParams() ) );
+                                     ->withDevice( $this->removeEmptyParameters( $request_data->getDeviceParameters() ) )
+                                     ->withEvent( $this->removeEmptyParameters( $request_data->getEventParameters() ) )
+                                     ->withAccount( $this->removeEmptyParameters( $request_data->getAccountParameters() ) )
+                                     ->withEmail( $this->removeEmptyParameters( $request_data->getEmailParameters() ) )
+                                     ->withBilling( $this->removeEmptyParameters( $request_data->getBillingParameters() ) )
+                                     ->withShipping( $this->removeEmptyParameters( $request_data->getShippingParameters() ) )
+                                     ->withPayment( $this->removeEmptyParameters( $request_data->getPaymentParameters() ) )
+                                     ->withCreditCard( $this->removeEmptyParameters( $request_data->getCreditCardParameters() ) )
+                                     ->withOrder( $this->removeEmptyParameters( $request_data->getOrderParameters() ) )
+                                     ->withCustomInputs( $this->removeEmptyParameters( $request_data->getCustomParameters() ) );
 
          // Loop through each item
-         foreach ( $request_data->getItemParams() as $item ) {
+         foreach ( $request_data->getItemParameters() as $item ) {
             // Add the item (MinFraud returns immutable objects, so we need to redeclare $api_request to save the latest instance)
             $api_request = $api_request->withShoppingCartItem( $item );
          }
