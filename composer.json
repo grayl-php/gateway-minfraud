@@ -15,13 +15,13 @@
     }
   ],
   "type": "library",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "require": {
-    "grayl/config": "^1",
-    "grayl/gateway-common": "^1",
-    "grayl/mixin-common": "^1",
-    "grayl/omnipay-common": "^1",
-    "grayl/store-order": "^1",
+    "grayl/config": "^1.1",
+    "grayl/gateway-common": "^1.1",
+    "grayl/mixin-common": "^1.0",
+    "grayl/omnipay-common": "^1.2",
+    "grayl/store-order": "^1.0",
     "maxmind/minfraud": "^1",
     "php": "~7.4"
   },
