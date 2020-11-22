@@ -191,8 +191,7 @@
                                                         $order );
 
          // Override the IP
-         $request_data->setDeviceParam( 'ip_address',
-                                        '8.8.8.8' );
+         $request_data->setIpAddress( '8.8.8.8' );
 
          // Translate the credit card information into the MinFraud request
          MinFraudOmnipayHelper::getInstance()

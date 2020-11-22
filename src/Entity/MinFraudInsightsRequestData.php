@@ -3,6 +3,15 @@
    namespace Grayl\Gateway\MinFraud\Entity;
 
    use Grayl\Gateway\Common\Entity\RequestDataAbstract;
+   use Grayl\Gateway\MinFraud\Traits\MinFraudBillingParametersTrait;
+   use Grayl\Gateway\MinFraud\Traits\MinFraudCreditCardParametersTrait;
+   use Grayl\Gateway\MinFraud\Traits\MinFraudCustomParametersTrait;
+   use Grayl\Gateway\MinFraud\Traits\MinFraudDeviceParametersTrait;
+   use Grayl\Gateway\MinFraud\Traits\MinFraudEmailParametersTrait;
+   use Grayl\Gateway\MinFraud\Traits\MinFraudEventParametersTrait;
+   use Grayl\Gateway\MinFraud\Traits\MinFraudOrderParametersTrait;
+   use Grayl\Gateway\MinFraud\Traits\MinFraudPaymentParametersTrait;
+   use Grayl\Gateway\MinFraud\Traits\MinFraudShippingParametersTrait;
    use Grayl\Mixin\Common\Entity\FlatDataBag;
    use Grayl\Mixin\Common\Entity\KeyedDataBag;
 
@@ -15,82 +24,93 @@
    class MinFraudInsightsRequestData extends RequestDataAbstract
    {
 
+      // Traits
+      use MinFraudBillingParametersTrait;
+      use MinFraudCreditCardParametersTrait;
+      use MinFraudCustomParametersTrait;
+      use MinFraudDeviceParametersTrait;
+      use MinFraudEmailParametersTrait;
+      use MinFraudEventParametersTrait;
+      use MinFraudOrderParametersTrait;
+      use MinFraudPaymentParametersTrait;
+      use MinFraudShippingParametersTrait;
+
       /**
        * A set of device parameters for the API
        *
        * @var KeyedDataBag
        */
-      private KeyedDataBag $device_params;
+      private KeyedDataBag $device_parameters;
 
       /**
        * A set of event parameters for the API
        *
        * @var KeyedDataBag
        */
-      private KeyedDataBag $event_params;
+      private KeyedDataBag $event_parameters;
 
       /**
        * A set of account parameters for the API
        *
        * @var KeyedDataBag
        */
-      private KeyedDataBag $account_params;
+      private KeyedDataBag $account_parameters;
 
       /**
        * A set of email parameters for the API
        *
        * @var KeyedDataBag
        */
-      private KeyedDataBag $email_params;
+      private KeyedDataBag $email_parameters;
 
       /**
        * A set of billing parameters for the API
        *
        * @var KeyedDataBag
        */
-      private KeyedDataBag $billing_params;
+      private KeyedDataBag $billing_parameters;
 
       /**
        * A set of shipping parameters for the API
        *
        * @var KeyedDataBag
        */
-      private KeyedDataBag $shipping_params;
+      private KeyedDataBag $shipping_parameters;
 
       /**
        * A set of payment parameters for the API
        *
        * @var KeyedDataBag
        */
-      private KeyedDataBag $payment_params;
+      private KeyedDataBag $payment_parameters;
 
       /**
        * A set of credit card parameters for the API
        *
        * @var KeyedDataBag
        */
-      private KeyedDataBag $credit_card_params;
+      private KeyedDataBag $credit_card_parameters;
 
       /**
        * A set of order parameters for the API
        *
        * @var KeyedDataBag
        */
-      private KeyedDataBag $order_params;
-
-      /**
-       * A set of custom parameters for the API
-       *
-       * @var KeyedDataBag
-       */
-      private KeyedDataBag $custom_params;
+      private KeyedDataBag $order_parameters;
 
       /**
        * A set of item parameters for the API
        *
        * @var FlatDataBag
        */
-      private FlatDataBag $item_params;
+      private FlatDataBag $item_parameters;
+
+      /**
+       * A set of custom parameters for the API
+       *
+       * @var KeyedDataBag
+       */
+      private KeyedDataBag $custom_parameters;
 
 
       /**
@@ -105,17 +125,17 @@
          parent::__construct( $action );
 
          // Create the bags
-         $this->device_params      = new KeyedDataBag();
-         $this->event_params       = new KeyedDataBag();
-         $this->account_params     = new KeyedDataBag();
-         $this->email_params       = new KeyedDataBag();
-         $this->billing_params     = new KeyedDataBag();
-         $this->shipping_params    = new KeyedDataBag();
-         $this->payment_params     = new KeyedDataBag();
-         $this->credit_card_params = new KeyedDataBag();
-         $this->order_params       = new KeyedDataBag();
-         $this->custom_params      = new KeyedDataBag();
-         $this->item_params        = new FlatDataBag();
+         $this->device_parameters      = new KeyedDataBag();
+         $this->event_parameters       = new KeyedDataBag();
+         $this->account_parameters     = new KeyedDataBag();
+         $this->email_parameters       = new KeyedDataBag();
+         $this->billing_parameters     = new KeyedDataBag();
+         $this->shipping_parameters    = new KeyedDataBag();
+         $this->payment_parameters     = new KeyedDataBag();
+         $this->credit_card_parameters = new KeyedDataBag();
+         $this->order_parameters       = new KeyedDataBag();
+         $this->item_parameters        = new FlatDataBag();
+         $this->custom_parameters      = new KeyedDataBag();
       }
 
 
@@ -124,11 +144,11 @@
        *
        * @return array
        */
-      public function getDeviceParams (): array
+      public function getDeviceParameters (): array
       {
 
          // Return it
-         return $this->device_params->getVariables();
+         return $this->device_parameters->getVariables();
       }
 
 
@@ -138,13 +158,13 @@
        * @param string  $key   The key for the parameter
        * @param ?string $value The value for the parameter
        */
-      public function setDeviceParam ( string $key,
-                                       ?string $value ): void
+      public function setDeviceParameter ( string $key,
+                                           ?string $value ): void
       {
 
          // Set the parameter
-         $this->device_params->setVariable( $key,
-                                            $value );
+         $this->device_parameters->setVariable( $key,
+                                                $value );
       }
 
 
@@ -153,11 +173,11 @@
        *
        * @return array
        */
-      public function getEventParams (): array
+      public function getEventParameters (): array
       {
 
          // Return it
-         return $this->event_params->getVariables();
+         return $this->event_parameters->getVariables();
       }
 
 
@@ -167,13 +187,13 @@
        * @param string  $key   The key for the parameter
        * @param ?string $value The value for the parameter
        */
-      public function setEventParam ( string $key,
-                                      ?string $value ): void
+      public function setEventParameter ( string $key,
+                                          ?string $value ): void
       {
 
          // Set the parameter
-         $this->event_params->setVariable( $key,
-                                           $value );
+         $this->event_parameters->setVariable( $key,
+                                               $value );
       }
 
 
@@ -182,11 +202,11 @@
        *
        * @return array
        */
-      public function getAccountParams (): array
+      public function getAccountParameters (): array
       {
 
          // Return it
-         return $this->account_params->getVariables();
+         return $this->account_parameters->getVariables();
       }
 
 
@@ -196,13 +216,13 @@
        * @param string  $key   The key for the parameter
        * @param ?string $value The value for the parameter
        */
-      public function setAccountParam ( string $key,
-                                        ?string $value ): void
+      public function setAccountParameter ( string $key,
+                                            ?string $value ): void
       {
 
          // Set the parameter
-         $this->account_params->setVariable( $key,
-                                             $value );
+         $this->account_parameters->setVariable( $key,
+                                                 $value );
       }
 
 
@@ -211,11 +231,11 @@
        *
        * @return array
        */
-      public function getEmailParams (): array
+      public function getEmailParameters (): array
       {
 
          // Return it
-         return $this->email_params->getVariables();
+         return $this->email_parameters->getVariables();
       }
 
 
@@ -225,13 +245,13 @@
        * @param string  $key   The key for the parameter
        * @param ?string $value The value for the parameter
        */
-      public function setEmailParam ( string $key,
-                                      ?string $value ): void
+      public function setEmailParameter ( string $key,
+                                          ?string $value ): void
       {
 
          // Set the parameter
-         $this->email_params->setVariable( $key,
-                                           $value );
+         $this->email_parameters->setVariable( $key,
+                                               $value );
       }
 
 
@@ -240,11 +260,11 @@
        *
        * @return array
        */
-      public function getBillingParams (): array
+      public function getBillingParameters (): array
       {
 
          // Return it
-         return $this->billing_params->getVariables();
+         return $this->billing_parameters->getVariables();
       }
 
 
@@ -254,13 +274,13 @@
        * @param string  $key   The key for the parameter
        * @param ?string $value The value for the parameter
        */
-      public function setBillingParam ( string $key,
-                                        ?string $value ): void
+      public function setBillingParameter ( string $key,
+                                            ?string $value ): void
       {
 
          // Set the parameter
-         $this->billing_params->setVariable( $key,
-                                             $value );
+         $this->billing_parameters->setVariable( $key,
+                                                 $value );
       }
 
 
@@ -269,11 +289,11 @@
        *
        * @return array
        */
-      public function getShippingParams (): array
+      public function getShippingParameters (): array
       {
 
          // Return it
-         return $this->shipping_params->getVariables();
+         return $this->shipping_parameters->getVariables();
       }
 
 
@@ -283,13 +303,13 @@
        * @param string  $key   The key for the parameter
        * @param ?string $value The value for the parameter
        */
-      public function setShippingParam ( string $key,
-                                         ?string $value ): void
+      public function setShippingParameter ( string $key,
+                                             ?string $value ): void
       {
 
          // Set the parameter
-         $this->shipping_params->setVariable( $key,
-                                              $value );
+         $this->shipping_parameters->setVariable( $key,
+                                                  $value );
       }
 
 
@@ -298,11 +318,11 @@
        *
        * @return array
        */
-      public function getPaymentParams (): array
+      public function getPaymentParameters (): array
       {
 
          // Return it
-         return $this->payment_params->getVariables();
+         return $this->payment_parameters->getVariables();
       }
 
 
@@ -312,13 +332,13 @@
        * @param string  $key   The key for the parameter
        * @param ?string $value The value for the parameter
        */
-      public function setPaymentParam ( string $key,
-                                        ?string $value ): void
+      public function setPaymentParameter ( string $key,
+                                            ?string $value ): void
       {
 
          // Set the parameter
-         $this->payment_params->setVariable( $key,
-                                             $value );
+         $this->payment_parameters->setVariable( $key,
+                                                 $value );
       }
 
 
@@ -327,11 +347,11 @@
        *
        * @return array
        */
-      public function getCreditCardParams (): array
+      public function getCreditCardParameters (): array
       {
 
          // Return it
-         return $this->credit_card_params->getVariables();
+         return $this->credit_card_parameters->getVariables();
       }
 
 
@@ -341,13 +361,13 @@
        * @param string  $key   The key for the parameter
        * @param ?string $value The value for the parameter
        */
-      public function setCreditCardParam ( string $key,
-                                           ?string $value ): void
+      public function setCreditCardParameter ( string $key,
+                                               ?string $value ): void
       {
 
          // Set the parameter
-         $this->credit_card_params->setVariable( $key,
-                                                 $value );
+         $this->credit_card_parameters->setVariable( $key,
+                                                     $value );
       }
 
 
@@ -356,11 +376,11 @@
        *
        * @return array
        */
-      public function getOrderParams (): array
+      public function getOrderParameters (): array
       {
 
          // Return it
-         return $this->order_params->getVariables();
+         return $this->order_parameters->getVariables();
       }
 
 
@@ -370,42 +390,13 @@
        * @param string  $key   The key for the parameter
        * @param ?string $value The value for the parameter
        */
-      public function setOrderParam ( string $key,
-                                      ?string $value )
+      public function setOrderParameter ( string $key,
+                                          ?string $value )
       {
 
          // Set the parameter
-         $this->order_params->setVariable( $key,
-                                           $value );
-      }
-
-
-      /**
-       * Gets the entire array of custom params
-       *
-       * @return array
-       */
-      public function getCustomParams (): array
-      {
-
-         // Return it
-         return $this->custom_params->getVariables();
-      }
-
-
-      /**
-       * Sets a parameter for the custom array
-       *
-       * @param string  $key   The key for the parameter
-       * @param ?string $value The value for the parameter
-       */
-      public function setCustomParam ( string $key,
-                                       ?string $value ): void
-      {
-
-         // Set the parameter
-         $this->custom_params->setVariable( $key,
-                                            $value );
+         $this->order_parameters->setVariable( $key,
+                                               $value );
       }
 
 
@@ -414,11 +405,11 @@
        *
        * @return array
        */
-      public function getItemParams (): array
+      public function getItemParameters (): array
       {
 
          // Return it
-         return $this->item_params->getPieces();
+         return $this->item_parameters->getPieces();
       }
 
 
@@ -437,10 +428,39 @@
       {
 
          // Add the item
-         $this->item_params->putPiece( [ 'category' => $category,
-                                         'item_id'  => $sku,
-                                         'quantity' => $quantity,
-                                         'price'    => $price, ] );
+         $this->item_parameters->putPiece( [ 'category' => $category,
+                                             'item_id'  => $sku,
+                                             'quantity' => $quantity,
+                                             'price'    => $price, ] );
+      }
+
+
+      /**
+       * Gets the entire array of custom params
+       *
+       * @return array
+       */
+      public function getCustomParameters (): array
+      {
+
+         // Return it
+         return $this->custom_parameters->getVariables();
+      }
+
+
+      /**
+       * Sets a parameter for the custom array
+       *
+       * @param string  $key   The key for the parameter
+       * @param ?string $value The value for the parameter
+       */
+      public function setCustomParameter ( string $key,
+                                           ?string $value ): void
+      {
+
+         // Set the parameter
+         $this->custom_parameters->setVariable( $key,
+                                                $value );
       }
 
    }
