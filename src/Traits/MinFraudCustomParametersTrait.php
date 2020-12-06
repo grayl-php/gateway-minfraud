@@ -15,11 +15,13 @@
    {
 
       /**
-       * Gets the description
+       * Gets the value of a custom input parameter
+       *
+       * @param string $key The key name of the custom input parameter as defined in MaxMind custom inputs
        *
        * @return string
        */
-      public function getDescription (): string
+      public function getCustomInput ( string $key ): string
       {
 
          // Return it
@@ -28,43 +30,18 @@
 
 
       /**
-       * Sets the description
+       * Sets a custom input parameter
        *
-       * @param string $description The description
+       * @param string $key   The key name of the custom input parameter as defined in MaxMind custom input parameters
+       * @param string $value The value of the custom input parameter
        */
-      public function setDescription ( string $description ): void
+      public function setCustomInput ( string $key,
+                                       string $value ): void
       {
 
-         // Set the description
-         $this->custom_parameters->setVariable( 'description',
-                                                $description );
-      }
-
-
-      /**
-       * Gets the reference
-       *
-       * @return string
-       */
-      public function getReference (): string
-      {
-
-         // Return it
-         return $this->custom_parameters->getVariable( 'reference' );
-      }
-
-
-      /**
-       * Sets the reference
-       *
-       * @param string $reference The reference
-       */
-      public function setReference ( string $reference ): void
-      {
-
-         // Set the reference
-         $this->custom_parameters->setVariable( 'reference',
-                                                $reference );
+         // Set the custom input parameter
+         $this->custom_parameters->setVariable( $key,
+                                                $value );
       }
 
    }
