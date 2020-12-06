@@ -3,6 +3,7 @@
    namespace Grayl\Gateway\MinFraud\Entity;
 
    use Grayl\Gateway\Common\Entity\RequestDataAbstract;
+   use Grayl\Gateway\MinFraud\Traits\MinFraudAccountParametersTrait;
    use Grayl\Gateway\MinFraud\Traits\MinFraudBillingParametersTrait;
    use Grayl\Gateway\MinFraud\Traits\MinFraudCreditCardParametersTrait;
    use Grayl\Gateway\MinFraud\Traits\MinFraudCustomParametersTrait;
@@ -25,6 +26,7 @@
    {
 
       // Traits
+      use MinFraudAccountParametersTrait;
       use MinFraudBillingParametersTrait;
       use MinFraudCreditCardParametersTrait;
       use MinFraudCustomParametersTrait;
