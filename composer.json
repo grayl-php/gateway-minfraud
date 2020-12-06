@@ -26,7 +26,6 @@
   },
   "require-dev": {
     "grayl/gateway-pdo": "^1",
-    "grayl/omnipay-authorizenet": "^1",
     "phpunit/phpunit": "^9"
   },
   "autoload": {
