@@ -31,17 +31,60 @@
       {
 
          // Build the request
-         $api_request = $gateway_data->getAPI()
-                                     ->withDevice( $this->removeEmptyParameters( $request_data->getDeviceParameters() ) )
-                                     ->withEvent( $this->removeEmptyParameters( $request_data->getEventParameters() ) )
-                                     ->withAccount( $this->removeEmptyParameters( $request_data->getAccountParameters() ) )
-                                     ->withEmail( $this->removeEmptyParameters( $request_data->getEmailParameters() ) )
-                                     ->withBilling( $this->removeEmptyParameters( $request_data->getBillingParameters() ) )
-                                     ->withShipping( $this->removeEmptyParameters( $request_data->getShippingParameters() ) )
-                                     ->withPayment( $this->removeEmptyParameters( $request_data->getPaymentParameters() ) )
-                                     ->withCreditCard( $this->removeEmptyParameters( $request_data->getCreditCardParameters() ) )
-                                     ->withOrder( $this->removeEmptyParameters( $request_data->getOrderParameters() ) )
-                                     ->withCustomInputs( $this->removeEmptyParameters( $request_data->getCustomParameters() ) );
+         $api_request = $gateway_data->getAPI();
+
+         // Add each type of param
+         // The SDK uses immutable classes, so it must be called like this in case there are empty values or sections that are not used at all in this request
+
+         // Device parameters
+         if ( ! empty( $this->removeEmptyParameters( $request_data->getDeviceParameters() ) ) ) {
+            $api_request = $api_request->withDevice( $this->removeEmptyParameters( $request_data->getDeviceParameters() ) );
+         }
+
+         // Event parameters
+         if ( ! empty( $this->removeEmptyParameters( $request_data->getEventParameters() ) ) ) {
+            $api_request = $api_request->withEvent( $this->removeEmptyParameters( $request_data->getEventParameters() ) );
+         }
+
+         // Account parameters
+         if ( ! empty( $this->removeEmptyParameters( $request_data->getAccountParameters() ) ) ) {
+            $api_request = $api_request->withAccount( $this->removeEmptyParameters( $request_data->getAccountParameters() ) );
+         }
+
+         // Email parameters
+         if ( ! empty( $this->removeEmptyParameters( $request_data->getEmailParameters() ) ) ) {
+            $api_request = $api_request->withEmail( $this->removeEmptyParameters( $request_data->getEmailParameters() ) );
+         }
+
+         // Billing parameters
+         if ( ! empty( $this->removeEmptyParameters( $request_data->getBillingParameters() ) ) ) {
+            $api_request = $api_request->withBilling( $this->removeEmptyParameters( $request_data->getBillingParameters() ) );
+         }
+
+         // Shippinh parameters
+         if ( ! empty( $this->removeEmptyParameters( $request_data->getShippingParameters() ) ) ) {
+            $api_request = $api_request->withShipping( $this->removeEmptyParameters( $request_data->getShippingParameters() ) );
+         }
+
+         // Payment parameters
+         if ( ! empty( $this->removeEmptyParameters( $request_data->getPaymentParameters() ) ) ) {
+            $api_request = $api_request->withPayment( $this->removeEmptyParameters( $request_data->getPaymentParameters() ) );
+         }
+
+         // Credit card parameters
+         if ( ! empty( $this->removeEmptyParameters( $request_data->getCreditCardParameters() ) ) ) {
+            $api_request = $api_request->withCreditCard( $this->removeEmptyParameters( $request_data->getCreditCardParameters() ) );
+         }
+
+         // Order parameters
+         if ( ! empty( $this->removeEmptyParameters( $request_data->getOrderParameters() ) ) ) {
+            $api_request = $api_request->withOrder( $this->removeEmptyParameters( $request_data->getOrderParameters() ) );
+         }
+
+         // Custom parameters
+         if ( ! empty( $this->removeEmptyParameters( $request_data->getCustomParameters() ) ) ) {
+            $api_request = $api_request->withCustomInputs( $this->removeEmptyParameters( $request_data->getCustomParameters() ) );
+         }
 
          // Loop through each item
          foreach ( $request_data->getItemParameters() as $item ) {
