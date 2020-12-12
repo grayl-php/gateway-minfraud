@@ -5,14 +5,9 @@
    use Grayl\Gateway\MinFraud\Controller\MinFraudInsightsRequestController;
    use Grayl\Gateway\MinFraud\Controller\MinFraudInsightsResponseController;
    use Grayl\Gateway\MinFraud\Entity\MinFraudGatewayData;
-   use Grayl\Gateway\MinFraud\Helper\MinFraudOmnipayHelper;
-   use Grayl\Gateway\MinFraud\Helper\MinFraudOrderHelper;
+   use Grayl\Gateway\MinFraud\Helper\MinFraudHelper;
    use Grayl\Gateway\MinFraud\MinFraudPorter;
    use Grayl\Gateway\PDO\PDOPorter;
-   use Grayl\Omnipay\AuthorizeNet\AuthorizeNetPorter;
-   use Grayl\Omnipay\Common\Entity\OmnipayGatewayCreditCard;
-   use Grayl\Store\Order\Controller\OrderController;
-   use Grayl\Store\Order\OrderPorter;
    use MaxMind\MinFraud\Model\Insights;
    use PHPUnit\Framework\TestCase;
 
@@ -64,115 +59,13 @@
 
 
       /**
-       * Creates a test order object with good data that will pass MinFraud
-       *
-       * @return OrderController
-       * @throws \Exception
-       */
-      public function testCreateOrderController ()
-      {
-
-         // Create the order
-         $order = OrderPorter::getInstance()
-                             ->newOrderController();
-
-         // Check the type of object returned
-         $this->assertInstanceOf( OrderController::class,
-                                  $order );
-
-         // Basic order data
-         $data = $order->getOrderData();
-         $data->setAmount( 25.00 );
-         $data->setDescription( 'MinFraud test order' );
-
-         // Customer creation
-         $order->setOrderCustomer( OrderPorter::getInstance()
-                                              ->newOrderCustomer( $order->getOrderID(),
-                                                                  'Jim',
-                                                                  'Doe',
-                                                                  'jim@gmailer.com',
-                                                                  '1450 SE Burnside Ave.',
-                                                                  '',
-                                                                  'Portland',
-                                                                  'OR',
-                                                                  '97235',
-                                                                  'US',
-                                                                  null ) );
-
-         // Payment
-         $order->setOrderPayment( OrderPorter::getInstance()
-                                             ->newOrderPayment( $order->getOrderID(),
-                                                                'testgood',
-                                                                'paypal',
-                                                                $order->getOrderAmount(),
-                                                                'authorize',
-                                                                true,
-                                                                null ) );
-
-         // Items
-         $order->putOrderItem( OrderPorter::getInstance()
-                                          ->newOrderItem( $order->getOrderID(),
-                                                          'item1',
-                                                          'Test Item',
-                                                          '2',
-                                                          16.00 ) );
-         $order->putOrderItem( OrderPorter::getInstance()
-                                          ->newOrderItem( $order->getOrderID(),
-                                                          'item2',
-                                                          'Test Item 2',
-                                                          '1',
-                                                          10.00 ) );
-
-         // Save the order
-         $order->saveOrder();
-
-         // Return the object
-         return $order;
-      }
-
-
-      /**
-       * Creates a test credit card object to be used in a test
-       *
-       * @returns OmnipayGatewayCreditCard
-       */
-      public function testCreateOmnipayGatewayCreditCard (): OmnipayGatewayCreditCard
-      {
-
-         // Create the OmnipayGatewayCreditCard
-         $credit_card = AuthorizeNetPorter::getInstance()
-                                          ->newOmnipayGatewayCreditCard( '4111111111111111',
-                                                                         12,
-                                                                         2022,
-                                                                         '869' );
-
-         // Check the type of object returned
-         $this->assertInstanceOf( OmnipayGatewayCreditCard::class,
-                                  $credit_card );
-
-         // Return the object
-         return $credit_card;
-      }
-
-
-      /**
        * Tests the creation of a MinFraudInsightsRequestController object
        *
-       * @param OrderController          $order       A configured OrderController with order information
-       * @param OmnipayGatewayCreditCard $credit_card A configured OmnipayGatewayCreditCard entity with payment information
-       *
-       * @depends testCreateOrderController
-       * @depends testCreateOmnipayGatewayCreditCard
        * @return MinFraudInsightsRequestController
        * @throws \Exception
        */
-      public function testCreateMinFraudInsightsRequestController ( OrderController $order,
-                                                                    OmnipayGatewayCreditCard $credit_card ): MinFraudInsightsRequestController
+      public function testCreateMinFraudInsightsRequestController (): MinFraudInsightsRequestController
       {
-
-         // Set default data needed to pass in a sterile environment
-         $_SERVER[ 'HTTP_USER_AGENT' ]      = 'Mozilla';
-         $_SERVER[ 'HTTP_ACCEPT_LANGUAGE' ] = 'en';
 
          // Create the controller
          $request_controller = MinFraudPorter::getInstance()
@@ -185,18 +78,76 @@
          // Grab the request data object
          $request_data = $request_controller->getRequestData();
 
-         // Translate the Order information into the MinFraud request
-         MinFraudOrderHelper::getInstance()
-                            ->translateOrderController( $request_data,
-                                                        $order );
+         // Device
+         $request_data->setIPAddress( $_SERVER[ 'REMOTE_ADDR' ] );
+         $request_data->setUserAgent( 'Mozilla' );
+         $request_data->setAcceptLanguage( 'en' );
+         $request_data->setSessionID( session_id() );
 
-         // Override the IP
-         $request_data->setIpAddress( '8.8.8.8' );
+         // Event
+         $request_data->setTransactionType( 'purchase' );
+         $request_data->setTransactionDate( date( DATE_RFC3339 ) );
+         $request_data->setTransactionID( 'test-' . time() );
 
-         // Translate the credit card information into the MinFraud request
-         MinFraudOmnipayHelper::getInstance()
-                              ->translateGatewayCreditCard( $request_data,
-                                                            $credit_card );
+         // Account
+         $request_data->setUserID( 1123 );
+         $request_data->setUsernameMD5( MinFraudHelper::getInstance()
+                                                      ->getUsernameMD5( 'jim@gmailer.com' ) );
+
+         // Email
+         $request_data->setEmailAddress( 'jim@gmailer.com' );
+         $request_data->setEmailDomain( MinFraudHelper::getInstance()
+                                                      ->getEmailAddressTLD( 'jim@gmailer.com' ) );
+
+         // Billing
+         $request_data->setBillingFirstName( 'Jim' );
+         $request_data->setBillingLastName( 'Doe' );
+         $request_data->setBillingAddress1( '1450 SE Burnside Ave.' );
+         $request_data->setBillingAddress2( null );
+         $request_data->setBillingCity( 'Portland' );
+         $request_data->setBillingPostcode( '97235' );
+         $request_data->setBillingCountry( 'US' );
+         $request_data->setBillingPhoneNumber( null );
+
+         // Shipping
+         $request_data->setShippingFirstName( 'Jim' );
+         $request_data->setShippingLastName( 'Doe' );
+         $request_data->setShippingAddress1( '1450 SE Burnside Ave.' );
+         $request_data->setShippingAddress2( null );
+         $request_data->setShippingCity( 'Portland' );
+         $request_data->setShippingPostcode( '97235' );
+         $request_data->setShippingCountry( 'US' );
+         $request_data->setShippingPhoneNumber( null );
+
+         // Payment
+         $request_data->setIsAuthorized( true );
+         $request_data->setProcessor( 'paypal' );
+
+         // Credit card
+         $request_data->setLast4Digits( MinFraudHelper::getInstance()
+                                                      ->getCreditCardEnding( '4111111111111111' ) );
+         $request_data->setIssuerIDNumber( MinFraudHelper::getInstance()
+                                                         ->getCreditCardIssuer( '4111111111111111' ) );
+         $request_data->setAVSResult( 'X' );
+         $request_data->setCVVResult( 'M' );
+
+         // Order
+         $request_data->setAmount( 99.00 );
+         $request_data->setCurrency( 'USD' );
+
+         // Item
+         $request_data->putItem( 'movie',
+                                 'diehard',
+                                 1,
+                                 9.99 );
+         $request_data->putItem( 'movie',
+                                 'matrix',
+                                 1,
+                                 19.99 );
+
+         // Custom
+         $request_data->setCustomInput( 'processor_payment_id',
+                                        'ID from the processor here' );
 
          // Return the object
          return $request_controller;
@@ -209,7 +160,7 @@
        * @param MinFraudInsightsRequestController $request A configured MinFraudInsightsRequestController to use
        *
        * @return MinFraudInsightsResponseController
-       * @depends      testCreateMinFraudInsightsRequestController
+       * @depends testCreateMinFraudInsightsRequestController
        * @throws \Exception
        */
       public function testSendMinFraudInsightsRequestController ( MinFraudInsightsRequestController $request ): MinFraudInsightsResponseController
@@ -240,52 +191,15 @@
          // Test the data
          $this->assertIsBool( $response->isSuccessful() );
          $this->assertNotNull( $response->getReferenceID() );
+         $this->assertNotNull( $response->getDisposition() );
          $this->assertNotEmpty( $response->getRiskScore() );
          $this->assertIsFloat( $response->getRiskScore() );
          $this->assertGreaterThan( 0,
                                    $response->getRiskScore() );
-
-         // TODO: Enable this check after dispositions have been added into the account
-         // $this->assertNotNull( $response->getDisposition() );
 
          // Check the raw data
          $this->assertInstanceOf( Insights::class,
                                   $response->getData() );
       }
 
-
-      /**
-       * Tests the helper that updates an order with the latest MinFraud status
-       *
-       * @param OrderController                    $order    A configured OrderController with order information
-       * @param MinFraudInsightsResponseController $response A MinFraudInsightsResponseController returned from the gateway
-       *
-       * @depends      testCreateOrderController
-       * @depends      testSendMinFraudInsightsRequestController
-       * @throws \Exception
-       */
-      public function testMinFraudOrderPaymentHelper ( OrderController $order,
-                                                       MinFraudInsightsResponseController $response ): void
-      {
-
-         // Call the helper to update the OrderController with a new OrderPayment
-         MinFraudOrderHelper::getInstance()
-                            ->newOrderPaymentFromMinFraudResponseController( $order,
-                                                                             $response,
-                                                                             $response->getRiskScore() . ':' . $response->getDisposition() );
-
-         // Now grab the payment
-         $payment = $order->getOrderPayment();
-
-         // Test the data
-         $this->assertEquals( $response->getReferenceID(),
-                              $payment->getReferenceID() );
-         $this->assertEquals( 'insights',
-                              $payment->getAction() );
-         $this->assertEquals( 'minfraud',
-                              $payment->getProcessor() );
-      }
-
    }
-
-

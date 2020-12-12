@@ -65,4 +65,19 @@
                         1 );
       }
 
+
+      /**
+       * Gets an MD5 hash of a username
+       *
+       * @param string $username The username itself
+       *
+       * @return string
+       */
+      public function getUsernameMD5 ( string $username ): string
+      {
+
+         // Return an MD% hash of the username
+         return md5( $username );
+      }
+
    }
